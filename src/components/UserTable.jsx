@@ -34,6 +34,7 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
               <th>Department</th>
               <th>Role</th>
               <th>Schedule</th>
+                  <th>Status</th>
               {isAdmin && <th>Actions</th>}
             </tr>
           </thead>
@@ -52,6 +53,11 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
                 <td>
                   <span className={`badge ${user.schedule === '8-4' ? 'badge-green' : 'badge-amber'}`}>
                     {user.schedule === '8-4' ? '🟢 08:00 → 16:00' : '🟡 09:00 → 17:00'}
+                  </span>
+                </td>
+                <td>
+                  <span className={`badge ${user.status === 'break' ? 'badge-break' : 'badge-active'}`}>
+                    {user.status === 'break' ? '🏖️ Congé' : '✅ Active'}
                   </span>
                 </td>
                 {isAdmin && (
