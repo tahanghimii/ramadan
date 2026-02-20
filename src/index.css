@@ -1,0 +1,124 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f3f4f6; color: #111827; min-height: 100vh; }
+
+/* ── Login ── */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #064e3b, #065f46, #047857); }
+.login-card { background: white; border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.login-logo { text-align: center; margin-bottom: 28px; }
+.login-logo .moon { font-size: 48px; }
+.login-logo h1 { font-size: 26px; color: #064e3b; margin-top: 8px; font-weight: 800; letter-spacing: -0.5px; }
+.login-logo p { color: #6b7280; font-size: 13px; margin-top: 4px; }
+.login-toggle { display: flex; background: #f3f4f6; border-radius: 8px; padding: 4px; margin-bottom: 20px; gap: 4px; }
+.login-toggle button { flex: 1; padding: 8px; border: none; border-radius: 6px; background: transparent; color: #6b7280; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.login-toggle button.active { background: white; color: #059669; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.login-card label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+.login-card input { width: 100%; padding: 11px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; margin-bottom: 16px; transition: border-color 0.2s; }
+.login-card input:focus { outline: none; border-color: #059669; }
+.btn-login { width: 100%; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-login:hover { background: #047857; }
+.btn-login:disabled { background: #9ca3af; cursor: not-allowed; }
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 230px; background: #064e3b; color: white; display: flex; flex-direction: column; padding: 28px 0; flex-shrink: 0; }
+.sidebar-logo { padding: 0 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+.sidebar-logo .moon { font-size: 36px; }
+.sidebar-logo h2 { font-size: 18px; margin-top: 6px; font-weight: 800; letter-spacing: -0.5px; }
+.sidebar-logo span { font-size: 11px; opacity: 0.6; }
+.sidebar-nav { flex: 1; padding: 20px 12px; }
+.sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 8px; font-size: 14px; color: rgba(255,255,255,0.75); cursor: pointer; margin-bottom: 4px; transition: all 0.2s; }
+.sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(255,255,255,0.12); color: white; }
+.sidebar-bottom { padding: 16px 12px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.admin-tag { display: flex; align-items: center; gap: 10px; padding: 10px 14px; font-size: 13px; opacity: 0.8; }
+.admin-avatar { width: 32px; height: 32px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+.btn-logout { width: 100%; margin-top: 10px; padding: 9px; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.btn-logout:hover { background: rgba(239,68,68,0.3); }
+.main { flex: 1; padding: 32px; overflow-y: auto; }
+.page-header { margin-bottom: 28px; }
+.page-header h1 { font-size: 24px; font-weight: 700; }
+.page-header p { color: #6b7280; margin-top: 4px; font-size: 14px; }
+.loading { text-align: center; padding: 60px; color: #6b7280; font-size: 15px; }
+
+/* ── Stats ── */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 16px; }
+.stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.stat-icon.blue { background: #dbeafe; }
+.stat-icon.green { background: #dcfce7; }
+.stat-icon.amber { background: #fef3c7; }
+.stat-info .number { font-size: 28px; font-weight: 700; }
+.stat-info .label { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+/* ── Card ── */
+.card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 24px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.card-header h2 { font-size: 16px; font-weight: 600; }
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 13px; font-weight: 600; color: #374151; }
+.form-group input, .form-group select { padding: 10px 12px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #059669; }
+.form-actions { margin-top: 16px; display: flex; gap: 10px; }
+
+/* ── Buttons ── */
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: #059669; color: white; }
+.btn-ghost { background: #f3f4f6; color: #374151; }
+.btn-sm { padding: 6px 14px; font-size: 13px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.btn-edit { background: #dbeafe; color: #1d4ed8; }
+.btn-edit:hover { background: #bfdbfe; }
+.btn-delete { background: #fee2e2; color: #b91c1c; }
+.btn-delete:hover { background: #fecaca; }
+
+/* ── Alerts ── */
+.alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; }
+.alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+
+/* ── Table ── */
+.search-bar { width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; margin-bottom: 16px; }
+.search-bar:focus { outline: none; border-color: #059669; }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; padding: 10px 14px; border-bottom: 2px solid #f3f4f6; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; font-weight: 600; }
+tbody td { padding: 14px; border-bottom: 1px solid #f9fafb; font-size: 14px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #fafafa; }
+.empty { text-align: center; padding: 40px; color: #9ca3af; }
+
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-amber { background: #fef3c7; color: #92400e; }
+.badge-blue  { background: #dbeafe; color: #1e40af; }
+.badge-orange { background: #ffedd5; color: #9a3412; }
+
+/* ── Filter Tabs ── */
+.filter-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.filter-tab { padding: 7px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1.5px solid #e5e7eb; background: white; color: #6b7280; font-weight: 500; transition: all 0.2s; }
+.filter-tab.active { background: #059669; color: white; border-color: #059669; }
+
+/* ── Team Cards ── */
+.team-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.team-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-top: 4px solid #e5e7eb; }
+.import-card { border-top-color: #0369a1; }
+.export-card { border-top-color: #b45309; }
+.team-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.team-icon { font-size: 32px; }
+.team-card-header h3 { font-size: 17px; font-weight: 700; }
+.team-card-header p { font-size: 13px; color: #6b7280; margin-top: 2px; }
+.team-schedule-breakdown { display: flex; flex-direction: column; gap: 10px; }
+.breakdown-item { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #374151; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .form-grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  .team-overview { grid-template-columns: 1fr; }
+  .main { padding: 16px; }
+}
