@@ -7,7 +7,10 @@ export default function UserDashboard({ session, onLogout }) {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const dept = session.department
-  const icon = dept === 'Import' ? '📥' : '📤'
+const icon = dept === 'Import' ? '📥' 
+           : dept === 'Export' ? '📤'
+           : dept === 'NL' ? '🚢'
+           : '🏢'
 
   useEffect(() => {
     getUsers(dept).then(data => { setUsers(data); setLoading(false) })
@@ -27,7 +30,10 @@ export default function UserDashboard({ session, onLogout }) {
         <div className="sidebar-bottom">
           <div className="admin-tag">
             <div className="admin-avatar"
-              style={{ background: dept === 'Import' ? '#0369a1' : '#b45309' }}>
+              style={{ background: dept === 'Import' ? '#0369a1' 
+          : dept === 'Export' ? '#b45309'
+          : dept === 'NL' ? '#0891b2'
+          : '#7c3aed' }}>
               {session.name[0].toUpperCase()}
             </div>
             <div>

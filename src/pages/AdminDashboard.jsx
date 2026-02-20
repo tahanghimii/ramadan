@@ -48,6 +48,8 @@ export default function AdminDashboard({ session, onLogout }) {
 
   const importUsers = users.filter(u => u.department === 'Import')
   const exportUsers = users.filter(u => u.department === 'Export')
+  const nlUsers = users.filter(u => u.department === 'NL')
+  const administrationUsers = users.filter(u => u.department === 'Administration')
 
   return (
     <div className="layout">
@@ -58,11 +60,14 @@ export default function AdminDashboard({ session, onLogout }) {
           <span>Admin Portal</span>
         </div>
         <nav className="sidebar-nav">
-          <a className={view === 'dashboard' ? 'active' : ''} onClick={() => setView('dashboard')}>📊 Dashboard</a>
-          <a className={view === 'users'     ? 'active' : ''} onClick={() => setView('users')}>👥 All Employees</a>
-          <a className={view === 'import'    ? 'active' : ''} onClick={() => setView('import')}>📥 Import Team</a>
-          <a className={view === 'export'    ? 'active' : ''} onClick={() => setView('export')}>📤 Export Team</a>
-          <a className={view === 'admins'    ? 'active' : ''} onClick={() => setView('admins')}>🔐 Admins</a>
+          <a className={view === 'dashboard'      ? 'active' : ''} onClick={() => setView('dashboard')}>📊 Dashboard</a>
+          <a className={view === 'users'          ? 'active' : ''} onClick={() => setView('users')}>👥 All Employees</a>
+          <a className={view === 'import'         ? 'active' : ''} onClick={() => setView('import')}>📥 Import Team</a>
+          <a className={view === 'export'         ? 'active' : ''} onClick={() => setView('export')}>📤 Export Team</a>
+          <a className={view === 'nl'             ? 'active' : ''} onClick={() => setView('nl')}>🚢 NL Team</a>
+          <a className={view === 'administration' ? 'active' : ''} onClick={() => setView('administration')}>🏢 Administration</a>
+          <a className={view === 'admins'         ? 'active' : ''} onClick={() => setView('admins')}>🔐 Admins</a>
+
         </nav>
         <div className="sidebar-bottom">
           <div className="admin-tag">
@@ -85,53 +90,93 @@ export default function AdminDashboard({ session, onLogout }) {
         )}
 
         {!loading && view === 'dashboard' && (
-          <>
-            <div className="page-header">
-              <h1>Dashboard</h1>
-              <p>Ramadan schedule overview</p>
-            </div>
-            <Stats users={users} />
-            <div className="team-overview">
-              <div className="team-card import-card">
-                <div className="team-card-header">
-                  <span className="team-icon">📥</span>
-                  <div><h3>Import Team</h3><p>{importUsers.length} employees</p></div>
-                </div>
-                <div className="team-schedule-breakdown">
-                  <div className="breakdown-item">
-                    <span className="badge badge-green">08:00 → 16:00</span>
-                    <span>{importUsers.filter(u => u.schedule === '8-4').length} people</span>
-                  </div>
-                  <div className="breakdown-item">
-                    <span className="badge badge-amber">09:00 → 17:00</span>
-                    <span>{importUsers.filter(u => u.schedule === '9-5').length} people</span>
-                  </div>
-                </div>
-                <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-                  onClick={() => setView('import')}>View Import Team →</button>
-              </div>
+  <>
+    <div className="page-header">
+      <h1>Dashboard</h1>
+      <p>Ramadan schedule overview</p>
+    </div>
+    <Stats users={users} />
+    <div className="team-overview">
 
-              <div className="team-card export-card">
-                <div className="team-card-header">
-                  <span className="team-icon">📤</span>
-                  <div><h3>Export Team</h3><p>{exportUsers.length} employees</p></div>
-                </div>
-                <div className="team-schedule-breakdown">
-                  <div className="breakdown-item">
-                    <span className="badge badge-green">08:00 → 16:00</span>
-                    <span>{exportUsers.filter(u => u.schedule === '8-4').length} people</span>
-                  </div>
-                  <div className="breakdown-item">
-                    <span className="badge badge-amber">09:00 → 17:00</span>
-                    <span>{exportUsers.filter(u => u.schedule === '9-5').length} people</span>
-                  </div>
-                </div>
-                <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-                  onClick={() => setView('export')}>View Export Team →</button>
-              </div>
-            </div>
-          </>
-        )}
+      <div className="team-card import-card">
+        <div className="team-card-header">
+          <span className="team-icon">📥</span>
+          <div><h3>Import Team</h3><p>{importUsers.length} employees</p></div>
+        </div>
+        <div className="team-schedule-breakdown">
+          <div className="breakdown-item">
+            <span className="badge badge-green">08:00 → 16:00</span>
+            <span>{importUsers.filter(u => u.schedule === '8-4').length} people</span>
+          </div>
+          <div className="breakdown-item">
+            <span className="badge badge-amber">09:00 → 17:00</span>
+            <span>{importUsers.filter(u => u.schedule === '9-5').length} people</span>
+          </div>
+        </div>
+        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
+          onClick={() => setView('import')}>View Import Team →</button>
+      </div>
+
+      <div className="team-card export-card">
+        <div className="team-card-header">
+          <span className="team-icon">📤</span>
+          <div><h3>Export Team</h3><p>{exportUsers.length} employees</p></div>
+        </div>
+        <div className="team-schedule-breakdown">
+          <div className="breakdown-item">
+            <span className="badge badge-green">08:00 → 16:00</span>
+            <span>{exportUsers.filter(u => u.schedule === '8-4').length} people</span>
+          </div>
+          <div className="breakdown-item">
+            <span className="badge badge-amber">09:00 → 17:00</span>
+            <span>{exportUsers.filter(u => u.schedule === '9-5').length} people</span>
+          </div>
+        </div>
+        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
+          onClick={() => setView('export')}>View Export Team →</button>
+      </div>
+
+      <div className="team-card nl-card">
+        <div className="team-card-header">
+          <span className="team-icon">🚢</span>
+          <div><h3>NL Team</h3><p>{nlUsers.length} employees</p></div>
+        </div>
+        <div className="team-schedule-breakdown">
+          <div className="breakdown-item">
+            <span className="badge badge-green">08:00 → 16:00</span>
+            <span>{nlUsers.filter(u => u.schedule === '8-4').length} people</span>
+          </div>
+          <div className="breakdown-item">
+            <span className="badge badge-amber">09:00 → 17:00</span>
+            <span>{nlUsers.filter(u => u.schedule === '9-5').length} people</span>
+          </div>
+        </div>
+        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
+          onClick={() => setView('nl')}>View NL Team →</button>
+      </div>
+
+      <div className="team-card admin-card">
+        <div className="team-card-header">
+          <span className="team-icon">🏢</span>
+          <div><h3>Administration</h3><p>{administrationUsers.length} employees</p></div>
+        </div>
+        <div className="team-schedule-breakdown">
+          <div className="breakdown-item">
+            <span className="badge badge-green">08:00 → 16:00</span>
+            <span>{administrationUsers.filter(u => u.schedule === '8-4').length} people</span>
+          </div>
+          <div className="breakdown-item">
+            <span className="badge badge-amber">09:00 → 17:00</span>
+            <span>{administrationUsers.filter(u => u.schedule === '9-5').length} people</span>
+          </div>
+        </div>
+        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
+          onClick={() => setView('administration')}>View Administration →</button>
+      </div>
+
+    </div>
+  </>
+)}
 
         {!loading && view === 'users' && (
           <>
@@ -172,6 +217,31 @@ export default function AdminDashboard({ session, onLogout }) {
             </div>
           </>
         )}
+        {!loading && view === 'nl' && (
+  <>
+    <div className="page-header"><h1>🚢 NL Team</h1><p>{nlUsers.length} employees</p></div>
+    <Stats users={nlUsers} label="NL" />
+    <div className="card">
+      <div className="card-header"><h2>NL Team Members</h2></div>
+      <UserTable users={nlUsers}
+        onEdit={u => { setEditingUser(u); setView('users') }}
+        onDelete={handleDeleteUser} isAdmin />
+    </div>
+  </>
+)}
+
+{!loading && view === 'administration' && (
+  <>
+    <div className="page-header"><h1>🏢 Administration</h1><p>{administrationUsers.length} employees</p></div>
+    <Stats users={administrationUsers} label="Administration" />
+    <div className="card">
+      <div className="card-header"><h2>Administration Members</h2></div>
+      <UserTable users={administrationUsers}
+        onEdit={u => { setEditingUser(u); setView('users') }}
+        onDelete={handleDeleteUser} isAdmin />
+    </div>
+  </>
+)}
 
         {!loading && view === 'admins' && (
           <>

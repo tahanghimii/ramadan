@@ -122,3 +122,5 @@ tbody tr:hover td { background: #fafafa; }
   .team-overview { grid-template-columns: 1fr; }
   .main { padding: 16px; }
 }
+.nl-card { border-top-color: #0891b2; }
+.admin-card { border-top-color: #7c3aed; }
