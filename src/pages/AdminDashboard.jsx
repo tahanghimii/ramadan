@@ -5,6 +5,7 @@ import UserForm from '../components/UserForm'
 import UserTable from '../components/UserTable'
 import AdminForm from '../components/AdminForm'
 import AdminTable from '../components/AdminTable'
+import EmailComposer from '../components/EmailComposer'
 
 export default function AdminDashboard({ session, onLogout }) {
   const [users, setUsers] = useState([])
@@ -14,6 +15,7 @@ export default function AdminDashboard({ session, onLogout }) {
   const [view, setView] = useState('dashboard')
   const [message, setMessage] = useState({ text: '', type: '' })
   const [loading, setLoading] = useState(true)
+  const [showEmail, setShowEmail] = useState(false)
 
   useEffect(() => { fetchAll() }, [])
 
@@ -51,6 +53,29 @@ export default function AdminDashboard({ session, onLogout }) {
   const nlUsers = users.filter(u => u.department === 'NL')
   const administrationUsers = users.filter(u => u.department === 'Administration')
 
+  const TeamCard = ({ icon, title, list, viewName, cardClass }) => (
+    <div className={`team-card ${cardClass}`}>
+      <div className="team-card-header">
+        <span className="team-icon">{icon}</span>
+        <div><h3>{title}</h3><p>{list.length} employees</p></div>
+      </div>
+      <div className="team-schedule-breakdown">
+        <div className="breakdown-item">
+          <span className="badge badge-green">08:00 → 16:00</span>
+          <span>{list.filter(u => u.schedule === '8-4').length} people</span>
+        </div>
+        <div className="breakdown-item">
+          <span className="badge badge-amber">09:00 → 17:00</span>
+          <span>{list.filter(u => u.schedule === '9-5').length} people</span>
+        </div>
+      </div>
+      <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
+        onClick={() => setView(viewName)}>
+        View {title} →
+      </button>
+    </div>
+  )
+
   return (
     <div className="layout">
       <aside className="sidebar">
@@ -67,7 +92,7 @@ export default function AdminDashboard({ session, onLogout }) {
           <a className={view === 'nl'             ? 'active' : ''} onClick={() => setView('nl')}>🚢 NL Team</a>
           <a className={view === 'administration' ? 'active' : ''} onClick={() => setView('administration')}>🏢 Administration</a>
           <a className={view === 'admins'         ? 'active' : ''} onClick={() => setView('admins')}>🔐 Admins</a>
-
+          <a onClick={() => setShowEmail(true)} style={{ cursor: 'pointer' }}>📧 Send Email</a>
         </nav>
         <div className="sidebar-bottom">
           <div className="admin-tag">
@@ -82,109 +107,49 @@ export default function AdminDashboard({ session, onLogout }) {
       </aside>
 
       <main className="main">
+
         {loading && <div className="loading">Loading...</div>}
 
         {!loading && message.text && (
           <div className={`alert ${message.type === 'error' ? 'alert-error' : 'alert-success'}`}
-            style={{ marginBottom: 20 }}>{message.text}</div>
+            style={{ marginBottom: 20 }}>
+            {message.text}
+          </div>
         )}
 
+        {/* ── Dashboard ── */}
         {!loading && view === 'dashboard' && (
-  <>
-    <div className="page-header">
-      <h1>Dashboard</h1>
-      <p>Ramadan schedule overview</p>
-    </div>
-    <Stats users={users} />
-    <div className="team-overview">
+          <>
+            <div className="page-header">
+              <h1>Dashboard</h1>
+              <p>Ramadan schedule overview</p>
+            </div>
+            <Stats users={users} />
+            <div className="team-overview">
+              <TeamCard icon="📥" title="Import Team"     list={importUsers}         viewName="import"         cardClass="import-card" />
+              <TeamCard icon="📤" title="Export Team"     list={exportUsers}         viewName="export"         cardClass="export-card" />
+              <TeamCard icon="🚢" title="NL Team"         list={nlUsers}             viewName="nl"             cardClass="nl-card" />
+              <TeamCard icon="🏢" title="Administration"  list={administrationUsers} viewName="administration" cardClass="admin-card" />
+            </div>
+          </>
+        )}
 
-      <div className="team-card import-card">
-        <div className="team-card-header">
-          <span className="team-icon">📥</span>
-          <div><h3>Import Team</h3><p>{importUsers.length} employees</p></div>
-        </div>
-        <div className="team-schedule-breakdown">
-          <div className="breakdown-item">
-            <span className="badge badge-green">08:00 → 16:00</span>
-            <span>{importUsers.filter(u => u.schedule === '8-4').length} people</span>
-          </div>
-          <div className="breakdown-item">
-            <span className="badge badge-amber">09:00 → 17:00</span>
-            <span>{importUsers.filter(u => u.schedule === '9-5').length} people</span>
-          </div>
-        </div>
-        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-          onClick={() => setView('import')}>View Import Team →</button>
-      </div>
-
-      <div className="team-card export-card">
-        <div className="team-card-header">
-          <span className="team-icon">📤</span>
-          <div><h3>Export Team</h3><p>{exportUsers.length} employees</p></div>
-        </div>
-        <div className="team-schedule-breakdown">
-          <div className="breakdown-item">
-            <span className="badge badge-green">08:00 → 16:00</span>
-            <span>{exportUsers.filter(u => u.schedule === '8-4').length} people</span>
-          </div>
-          <div className="breakdown-item">
-            <span className="badge badge-amber">09:00 → 17:00</span>
-            <span>{exportUsers.filter(u => u.schedule === '9-5').length} people</span>
-          </div>
-        </div>
-        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-          onClick={() => setView('export')}>View Export Team →</button>
-      </div>
-
-      <div className="team-card nl-card">
-        <div className="team-card-header">
-          <span className="team-icon">🚢</span>
-          <div><h3>NL Team</h3><p>{nlUsers.length} employees</p></div>
-        </div>
-        <div className="team-schedule-breakdown">
-          <div className="breakdown-item">
-            <span className="badge badge-green">08:00 → 16:00</span>
-            <span>{nlUsers.filter(u => u.schedule === '8-4').length} people</span>
-          </div>
-          <div className="breakdown-item">
-            <span className="badge badge-amber">09:00 → 17:00</span>
-            <span>{nlUsers.filter(u => u.schedule === '9-5').length} people</span>
-          </div>
-        </div>
-        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-          onClick={() => setView('nl')}>View NL Team →</button>
-      </div>
-
-      <div className="team-card admin-card">
-        <div className="team-card-header">
-          <span className="team-icon">🏢</span>
-          <div><h3>Administration</h3><p>{administrationUsers.length} employees</p></div>
-        </div>
-        <div className="team-schedule-breakdown">
-          <div className="breakdown-item">
-            <span className="badge badge-green">08:00 → 16:00</span>
-            <span>{administrationUsers.filter(u => u.schedule === '8-4').length} people</span>
-          </div>
-          <div className="breakdown-item">
-            <span className="badge badge-amber">09:00 → 17:00</span>
-            <span>{administrationUsers.filter(u => u.schedule === '9-5').length} people</span>
-          </div>
-        </div>
-        <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }}
-          onClick={() => setView('administration')}>View Administration →</button>
-      </div>
-
-    </div>
-  </>
-)}
-
+        {/* ── All Employees ── */}
         {!loading && view === 'users' && (
           <>
-            <div className="page-header"><h1>All Employees</h1></div>
-            <UserForm editingUser={editingUser}
+            <div className="page-header">
+              <h1>All Employees</h1>
+              <button className="btn btn-primary" style={{ marginTop: 4 }}
+                onClick={() => setShowEmail(true)}>
+                📧 Send Email
+              </button>
+            </div>
+            <UserForm
+              editingUser={editingUser}
               onSave={() => { fetchAll(); setEditingUser(null); showMessage(editingUser ? 'Updated!' : 'Added!') }}
               onError={msg => showMessage(msg, 'error')}
-              onCancel={() => setEditingUser(null)} />
+              onCancel={() => setEditingUser(null)}
+            />
             <div className="card">
               <div className="card-header"><h2>Employee List ({users.length})</h2></div>
               <UserTable users={users} onEdit={setEditingUser} onDelete={handleDeleteUser} isAdmin />
@@ -192,12 +157,16 @@ export default function AdminDashboard({ session, onLogout }) {
           </>
         )}
 
+        {/* ── Import ── */}
         {!loading && view === 'import' && (
           <>
             <div className="page-header"><h1>📥 Import Team</h1><p>{importUsers.length} employees</p></div>
             <Stats users={importUsers} label="Import" />
             <div className="card">
-              <div className="card-header"><h2>Import Team Members</h2></div>
+              <div className="card-header">
+                <h2>Import Team Members</h2>
+                <button className="btn btn-primary" onClick={() => setShowEmail(true)}>📧 Email Team</button>
+              </div>
               <UserTable users={importUsers}
                 onEdit={u => { setEditingUser(u); setView('users') }}
                 onDelete={handleDeleteUser} isAdmin />
@@ -205,51 +174,67 @@ export default function AdminDashboard({ session, onLogout }) {
           </>
         )}
 
+        {/* ── Export ── */}
         {!loading && view === 'export' && (
           <>
             <div className="page-header"><h1>📤 Export Team</h1><p>{exportUsers.length} employees</p></div>
             <Stats users={exportUsers} label="Export" />
             <div className="card">
-              <div className="card-header"><h2>Export Team Members</h2></div>
+              <div className="card-header">
+                <h2>Export Team Members</h2>
+                <button className="btn btn-primary" onClick={() => setShowEmail(true)}>📧 Email Team</button>
+              </div>
               <UserTable users={exportUsers}
                 onEdit={u => { setEditingUser(u); setView('users') }}
                 onDelete={handleDeleteUser} isAdmin />
             </div>
           </>
         )}
+
+        {/* ── NL ── */}
         {!loading && view === 'nl' && (
-  <>
-    <div className="page-header"><h1>🚢 NL Team</h1><p>{nlUsers.length} employees</p></div>
-    <Stats users={nlUsers} label="NL" />
-    <div className="card">
-      <div className="card-header"><h2>NL Team Members</h2></div>
-      <UserTable users={nlUsers}
-        onEdit={u => { setEditingUser(u); setView('users') }}
-        onDelete={handleDeleteUser} isAdmin />
-    </div>
-  </>
-)}
+          <>
+            <div className="page-header"><h1>🚢 NL Team</h1><p>{nlUsers.length} employees</p></div>
+            <Stats users={nlUsers} label="NL" />
+            <div className="card">
+              <div className="card-header">
+                <h2>NL Team Members</h2>
+                <button className="btn btn-primary" onClick={() => setShowEmail(true)}>📧 Email Team</button>
+              </div>
+              <UserTable users={nlUsers}
+                onEdit={u => { setEditingUser(u); setView('users') }}
+                onDelete={handleDeleteUser} isAdmin />
+            </div>
+          </>
+        )}
 
-{!loading && view === 'administration' && (
-  <>
-    <div className="page-header"><h1>🏢 Administration</h1><p>{administrationUsers.length} employees</p></div>
-    <Stats users={administrationUsers} label="Administration" />
-    <div className="card">
-      <div className="card-header"><h2>Administration Members</h2></div>
-      <UserTable users={administrationUsers}
-        onEdit={u => { setEditingUser(u); setView('users') }}
-        onDelete={handleDeleteUser} isAdmin />
-    </div>
-  </>
-)}
+        {/* ── Administration ── */}
+        {!loading && view === 'administration' && (
+          <>
+            <div className="page-header"><h1>🏢 Administration</h1><p>{administrationUsers.length} employees</p></div>
+            <Stats users={administrationUsers} label="Administration" />
+            <div className="card">
+              <div className="card-header">
+                <h2>Administration Members</h2>
+                <button className="btn btn-primary" onClick={() => setShowEmail(true)}>📧 Email Team</button>
+              </div>
+              <UserTable users={administrationUsers}
+                onEdit={u => { setEditingUser(u); setView('users') }}
+                onDelete={handleDeleteUser} isAdmin />
+            </div>
+          </>
+        )}
 
+        {/* ── Admins ── */}
         {!loading && view === 'admins' && (
           <>
             <div className="page-header"><h1>🔐 Admins</h1></div>
-            <AdminForm editingAdmin={editingAdmin}
+            <AdminForm
+              editingAdmin={editingAdmin}
               onSave={() => { fetchAll(); setEditingAdmin(null); showMessage(editingAdmin ? 'Admin updated!' : 'Admin added!') }}
               onError={msg => showMessage(msg, 'error')}
-              onCancel={() => setEditingAdmin(null)} />
+              onCancel={() => setEditingAdmin(null)}
+            />
             <div className="card">
               <div className="card-header"><h2>Admin List ({admins.length})</h2></div>
               <AdminTable admins={admins} currentId={session.id}
@@ -257,7 +242,17 @@ export default function AdminDashboard({ session, onLogout }) {
             </div>
           </>
         )}
+
       </main>
+
+      {/* ── Email Modal ── */}
+      {showEmail && (
+        <EmailComposer
+          users={users}
+          onClose={() => setShowEmail(false)}
+        />
+      )}
+
     </div>
   )
 }

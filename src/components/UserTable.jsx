@@ -24,7 +24,10 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
             onClick={() => setFilter(val)}>{label}</button>
         ))}
       </div>
-      {filtered.length === 0 ? <div className="empty">No employees found</div> : (
+
+      {filtered.length === 0 ? (
+        <div className="empty">No employees found</div>
+      ) : (
         <table>
           <thead>
             <tr>
@@ -34,7 +37,7 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
               <th>Department</th>
               <th>Role</th>
               <th>Schedule</th>
-                  <th>Status</th>
+              <th>Status</th>
               {isAdmin && <th>Actions</th>}
             </tr>
           </thead>
@@ -45,8 +48,8 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
                 <td style={{ color: '#6b7280' }}>{user.email}</td>
                 <td>{user.phone || <span style={{ color: '#d1d5db' }}>—</span>}</td>
                 <td>
-                  <span className={`badge ${user.department === 'Import' ? 'badge-blue' : 'badge-orange'}`}>
-                    {user.department === 'Import' ? '📥' : '📤'} {user.department}
+                  <span className={`badge ${user.department === 'Import' ? 'badge-blue' : user.department === 'Export' ? 'badge-orange' : user.department === 'NL' ? 'badge-blue' : 'badge-purple'}`}>
+                    {user.department === 'Import' ? '📥' : user.department === 'Export' ? '📤' : user.department === 'NL' ? '🚢' : '🏢'} {user.department}
                   </span>
                 </td>
                 <td>{user.role || <span style={{ color: '#d1d5db' }}>—</span>}</td>
@@ -61,9 +64,10 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
                   </span>
                 </td>
                 {isAdmin && (
-                  <td style={{ display: 'flex', gap: 8 }}>
+                  <td style={{ display: 'flex', gap: 6 }}>
                     <button className="btn-sm btn-edit" onClick={() => onEdit(user)}>Edit</button>
                     <button className="btn-sm btn-delete" onClick={() => onDelete(user.id)}>Delete</button>
+                    <a className="btn-sm btn-email" href={`mailto:${user.email}`}>📧</a>
                   </td>
                 )}
               </tr>
