@@ -4,9 +4,9 @@ export default function RamadanCountdown() {
   const [info, setInfo] = useState(null)
 
   useEffect(() => {
-    // Ramadan 2026: March 1 - March 30
-    const start = new Date('2026-03-01')
-    const end   = new Date('2026-03-30')
+    // Ramadan 2026: February 18 - March 19
+    const start = new Date('2026-02-18')
+    const end   = new Date('2026-03-19')
     const now   = new Date()
 
     if (now < start) {
