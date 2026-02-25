@@ -1,29 +1,31 @@
 import { useState, useEffect } from 'react'
 import { addUser, updateUser } from '../sheets'
 
-const empty = { name: '', email: '', phone: '', password: '', department: 'Import', role: '', schedule: '8-4' , status: 'active'}
+const empty = {
+  name: '', email: '', phone: '', password: '',
+  department: 'Import', role: '', schedule: '8-4', status: 'active'
+}
 
 export default function UserForm({ editingUser, onSave, onError, onCancel }) {
   const [form, setForm] = useState(empty)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-  setForm(editingUser ? {
-    name: editingUser.name,
-    email: editingUser.email,
-    phone: editingUser.phone || '',
-    password: '',
-    department: editingUser.department,
-    role: editingUser.role || '',
-    schedule: editingUser.schedule,
-    status: editingUser.status || 'active'   // ← add this
-  } : empty)
-}, [editingUser])
+    setForm(editingUser ? {
+      name:       editingUser.name,
+      email:      editingUser.email,
+      phone:      editingUser.phone || '',
+      password:   '',
+      department: editingUser.department,
+      role:       editingUser.role || '',
+      schedule:   editingUser.schedule,
+      status:     editingUser.status || 'active'
+    } : empty)
+  }, [editingUser])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    console.log('Submitting form:', form) 
     let result
     if (editingUser) {
       const data = { ...form }
@@ -93,8 +95,8 @@ export default function UserForm({ editingUser, onSave, onError, onCancel }) {
             >
               <option value="Import">📥 Import</option>
               <option value="Export">📤 Export</option>
-              <option value="NL">📥 NL</option>
-              <option value="Administration">📥 Administration</option>
+              <option value="NL">🚢 NL</option>
+              <option value="Administration">🏢 Administration</option>
             </select>
           </div>
 
@@ -108,16 +110,18 @@ export default function UserForm({ editingUser, onSave, onError, onCancel }) {
               <option value="9-5">🟡 09:00 → 17:00 (Late)</option>
             </select>
           </div>
-            <div className="form-group">
-           <label>Status</label>
-           <select
-             value={form.status}
-             onChange={e => setForm({ ...form, status: e.target.value })}
-           >
-             <option value="active">✅ Active</option>
-             <option value="break">🏖️ On Break (Congé)</option>
-           </select>
-         </div>
+
+          <div className="form-group">
+            <label>Status</label>
+            <select
+              value={form.status}
+              onChange={e => setForm({ ...form, status: e.target.value })}
+            >
+              <option value="active">✅ Active</option>
+              <option value="break">🏖️ On Break (Congé)</option>
+            </select>
+          </div>
+
           <div className="form-group">
             <label>{editingUser ? 'New Password (blank = keep)' : 'Password *'}</label>
             <input

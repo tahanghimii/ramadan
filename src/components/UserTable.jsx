@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import BulkActions from './BulkActions'
 
-export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
+export default function UserTable({ users, onEdit, onDelete, isAdmin, onRefresh }) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
+  const [selected, setSelected] = useState([])
 
   const filtered = users.filter(u => {
     const matchSearch =
@@ -14,16 +16,44 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
     return matchSearch && matchFilter
   })
 
+  const toggleSelect = (id) => {
+    setSelected(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const toggleAll = () => {
+    setSelected(selected.length === filtered.length ? [] : filtered.map(u => u.id))
+  }
+
   return (
     <>
       <input className="search-bar" placeholder="Search name, email, role, phone..."
         value={search} onChange={e => setSearch(e.target.value)} />
-      <div className="filter-tabs">
-        {[['all', 'All'], ['8-4', '08:00 → 16:00'], ['9-5', '09:00 → 17:00']].map(([val, label]) => (
-          <button key={val} className={`filter-tab ${filter === val ? 'active' : ''}`}
-            onClick={() => setFilter(val)}>{label}</button>
-        ))}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="filter-tabs">
+          {[['all', 'All'], ['8-4', '08:00 → 16:00'], ['9-5', '09:00 → 17:00']].map(([val, label]) => (
+            <button key={val} className={`filter-tab ${filter === val ? 'active' : ''}`}
+              onClick={() => setFilter(val)}>{label}</button>
+          ))}
+        </div>
+        {isAdmin && selected.length > 0 && (
+          <span style={{ fontSize: 13, color: '#059669', fontWeight: 600 }}>
+            {selected.length} selected
+          </span>
+        )}
       </div>
+
+      {/* Bulk Actions Bar */}
+      {isAdmin && selected.length > 0 && (
+        <BulkActions
+          selectedIds={selected}
+          users={users}
+          onDone={() => { setSelected([]); onRefresh?.() }}
+          onCancel={() => setSelected([])}
+        />
+      )}
 
       {filtered.length === 0 ? (
         <div className="empty">No employees found</div>
@@ -31,6 +61,13 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
         <table>
           <thead>
             <tr>
+              {isAdmin && (
+                <th style={{ width: 40 }}>
+                  <input type="checkbox"
+                    checked={selected.length === filtered.length && filtered.length > 0}
+                    onChange={toggleAll} />
+                </th>
+              )}
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
@@ -43,7 +80,14 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
           </thead>
           <tbody>
             {filtered.map(user => (
-              <tr key={user.id}>
+              <tr key={user.id} className={selected.includes(user.id) ? 'row-selected' : ''}>
+                {isAdmin && (
+                  <td>
+                    <input type="checkbox"
+                      checked={selected.includes(user.id)}
+                      onChange={() => toggleSelect(user.id)} />
+                  </td>
+                )}
                 <td><strong>{user.name}</strong></td>
                 <td style={{ color: '#6b7280' }}>{user.email}</td>
                 <td>{user.phone || <span style={{ color: '#d1d5db' }}>—</span>}</td>
@@ -55,7 +99,7 @@ export default function UserTable({ users, onEdit, onDelete, isAdmin }) {
                 <td>{user.role || <span style={{ color: '#d1d5db' }}>—</span>}</td>
                 <td>
                   <span className={`badge ${user.schedule === '8-4' ? 'badge-green' : 'badge-amber'}`}>
-                    {user.schedule === '8-4' ? '🟢 08:00 → 16:00' : '🟡 09:00 → 17:00'}
+                    {user.schedule === '8-4' ? '🟢 08:00→16:00' : '🟡 09:00→17:00'}
                   </span>
                 </td>
                 <td>
